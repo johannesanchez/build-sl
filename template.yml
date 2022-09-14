@@ -5,22 +5,54 @@ Description: >
 
 Resources:
   buildsl:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
-      CodeUri: buildsl/
-      Handler: status.lambda_handler
+      CodeUri: ./buildsl
+      Handler: ops.lambda_handler
       Runtime: python3.8
+      Timeout: 10
+      # CodeUri: ./functions
+      # Layers:
+      #   - arn......
+      # Policies:
+      #   - DynamoCrudPolicy:
+      #       TableName: !Ref GreetingsTable
+      # Environment:
+      #   Variables:
+      #     GREETINGS_TABLE: !Ref GreetingsTable
       Events:
-        status:
+        ops:
           Type: Api
           Properties:
-            Path: /status
-            Method: get
-        # status:
+            Path: /ops
+            Method: ANY
+            StageName: dev
+        # # update:
         #   Type: Api
         #   Properties:
-        #     Path: /update
-        #     Method: post
+        #     Path: /ops
+        #     Method: POST
+        #     # Auth:
+        #     #   ApiKeyRequired: false
+  # GreetingsTable: 
+  #   Type: AWS::Serverless::SimpleTable
+
+  # EBRule:
+  #   Type: EventBridgeRule
+  #   Properties:
+  #     Input: '{"Key": "Value"}'
+  #     Pattern:
+  #       detail:
+  #         state:
+  #           - terminated
+  #     RetryPolicy:
+  #       MaximumRetryAttempts: 5
+  #       MaximumEventAgeInSeconds: 900
+  #     DeadLetterConfig:
+  #       Type: SQS
+  #       QueueLogicalId: EBRuleDLQ
+  #     Target:
+  #       Id: MyTarget
 
 # Outputs:
 #   HelloWorldApi:
